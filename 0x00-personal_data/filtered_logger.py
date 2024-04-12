@@ -80,12 +80,16 @@ def main():
     db = get_db()
     cursor = db.cursor()
     cursor.execute("SELECT * FROM users;")
+    fetch = cursor.fetchall()
 
-    for row in cursor:
-        filtered_row = "; ".join([f"{field}={filter_datum(['name', 'email',
-                    'phone', 'ssn', 'password'], '***', str(value), ';')}" 
-                    for field, value in zip(cursor.column_names, row)])
-        logger.info(filtered_row)
+    logger = get_logger()
+
+    for row in fetch:
+        fields = 'name={}; email={}; phone={}; ssn={}; password={}; ip={}; '\
+            'last_login={}; user_agent={};'
+        fields = fields.format(row[0], row[1], row[2], row[3],
+                               row[4], row[5], row[6], row[7])
+        logger.info(fields)
     
     cursor.close()
     db.close()

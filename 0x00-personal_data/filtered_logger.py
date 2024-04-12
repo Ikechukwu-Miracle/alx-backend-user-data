@@ -73,3 +73,23 @@ class RedactingFormatter(logging.Formatter):
             self.SEPARATOR)
         
         return message
+
+
+def main():
+    """Main function of filtered logger module"""
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM users;")
+
+    for row in cursor:
+        filtered_row = "; ".join([f"{field}={filter_datum(['name', 'email',
+                    'phone', 'ssn', 'password'], '***', str(value), ';')}" 
+                    for field, value in zip(cursor.column_names, row)])
+        logger.info(filtered_row)
+    
+    cursor.close()
+    db.close()
+
+
+if __name__ == "__main__":
+    main()

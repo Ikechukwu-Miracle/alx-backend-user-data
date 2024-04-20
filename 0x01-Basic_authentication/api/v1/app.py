@@ -26,7 +26,7 @@ else:
 
 @app.before_request
 def request_filter() -> None:
-    """ Checks if request needs authorization"""
+    """Checks if request needs authorization"""
     excluded_paths = [
         '/api/v1/status/',
         '/api/v1/unauthorized/',
@@ -43,8 +43,7 @@ def request_filter() -> None:
 
 @app.errorhandler(404)
 def not_found(error) -> str:
-    """ Not found handler
-    """
+    """ Not found handler"""
     return jsonify({"error": "Not found"}), 404
 
 
@@ -58,7 +57,6 @@ def unauthorized(error) -> str:
 def forbidden(error) -> str:
     """ Forbidden handler"""
     return jsonify({"error": "Forbidden"}), 403
-
 
 
 if __name__ == "__main__":

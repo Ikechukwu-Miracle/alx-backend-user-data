@@ -43,7 +43,7 @@ class DB:
             A User object
         """
         newUser = User(email=email, hashed_password=hashed_password)
-        self_session.add(newUser)
+        self._session.add(newUser)
         self._session.commit()
 
         return newUser

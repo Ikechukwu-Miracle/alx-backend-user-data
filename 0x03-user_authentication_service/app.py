@@ -13,6 +13,7 @@ def index() -> str:
     """JSON message"""
     return jsonify({"message": "Bienvenue"})
 
+
 @app.route("/users", methods=['POST'], strict_slashes=False)
 def users() -> str:
     """POST /users

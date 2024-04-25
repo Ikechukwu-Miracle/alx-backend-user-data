@@ -58,13 +58,13 @@ def login() -> str:
 def logout():
     """Ends a session"""
     cookie = request.cookies.get("session_id", None)
-    if  cookie is None:
+    if cookie is None:
         abort(403)
 
     user = AUTH.get_user_from_session_id(cookie)
-
     if user is None:
         abort(403)
+
     AUTH.destroy_session(user.id)
     return redirect("/")
 
@@ -81,6 +81,19 @@ def profile():
         abort(403)
 
     return jsonify({"email": user.email}), 200
+
+
+@app.route("/reset_password", methods=['POST'], strict_slashes=False)
+def get_reset_password_token():
+    """POST /reset_password"""
+    email = request.form.get("email")
+
+    try:
+        reset_token = AUTH.get_reset_password_token(email)
+    except ValueError:
+        abort(403)
+
+    return jsonify({"email": email, "reset_token": reset_token})
 
 
 if __name__ == "__main__":

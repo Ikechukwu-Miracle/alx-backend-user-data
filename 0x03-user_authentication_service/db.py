@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """DB module
 """
+import logging
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -9,6 +10,8 @@ from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import InvalidRequestError
 
 from user import Base, User
+
+logging.disable(logging.WARNING)
 
 
 class DB:
@@ -43,8 +46,13 @@ class DB:
             A User object
         """
         newUser = User(email=email, hashed_password=hashed_password)
-        self._session.add(newUser)
-        self._session.commit()
+        try:
+            self._session.add(newUser)
+            self._session.commit()
+        except Exception as e:
+            print(f"Error adding user to database: {e}")
+            self._session.rollback()
+            raise
 
         return newUser
 
@@ -54,9 +62,9 @@ class DB:
             result = self._session.query(User).filter_by(**kwargs).first()
 
             if result is None:
-                raise NoResultFound
+                raise NoResultFound()
 
         except TypeError:
-            raise InvalidRequestError
+            raise InvalidRequestError()
 
         return result

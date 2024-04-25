@@ -12,6 +12,7 @@ def _hash_password(password: str) -> str:
 
     return hashpw(password.encode('utf-8'), gensalt())
 
+
 def _generate_uuid() -> str:
     """Generates a unique identification number"""
     return str(uuid4())
@@ -35,7 +36,7 @@ class Auth:
             hashed_password = _hash_password(password)
             newUser = self._db.add_user(email, hashed_password)
             return newUser
-        
+
     def valid_login(self, email: str, password: str) -> bool:
         """Validates a user"""
         try:
@@ -43,7 +44,7 @@ class Auth:
             return checkpw(password.encode('utf-8'), user.hashed_password)
         except NoResultFound:
             return False
-    
+
     def create_session(self, email: str) -> str:
         """Creates a new session_id"""
         try:
